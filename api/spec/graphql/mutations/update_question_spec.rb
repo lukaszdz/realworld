@@ -2,15 +2,17 @@
 
 require 'rails_helper'
 
-RSpec.describe 'deleteArticle', type: :graphql do
+RSpec.describe 'updateQuestion', type: :graphql do
   let(:mutation) do
     <<-GRAPHQL
-    mutation DeleteArticleMutation($slug: ID!) {
-      deleteArticle(slug: $slug) {
-        article {
-          title
-          description
+    mutation UpdateQuestionMutation($id: ID!, $input: UpdateQuestionInput!) {
+      updateQuestion(id: $id, input: $input) {
+        question {
           body
+          tags {
+            id
+            name
+          }
         }
       }
     }
@@ -18,10 +20,14 @@ RSpec.describe 'deleteArticle', type: :graphql do
   end
   let(:author) { create(:author) }
   let(:tags) { create_list(:tag, 3) }
-  let(:article) { create(:article, author: author) }
+  let(:question) { create(:question, author: author) }
   let(:variables) do
     {
-      slug: article.slug
+      id: question.id,
+      input: {
+        body: question.body,
+        tagIds: tags.map(&:id)
+      }
     }
   end
 
@@ -29,7 +35,7 @@ RSpec.describe 'deleteArticle', type: :graphql do
     let(:result) do
       {
         data: {
-          deleteArticle: nil
+          updateQuestion: nil
         },
         errors: [
           {
@@ -42,11 +48,13 @@ RSpec.describe 'deleteArticle', type: :graphql do
               { column: 7, line: 2 }
             ],
             message: 'You are not authorized to perform this action',
-            path: ['deleteArticle']
+            path: ['updateQuestion']
           }
         ]
       }
     end
+
+
 
     it { is_expected.to eql result }
   end
@@ -57,7 +65,7 @@ RSpec.describe 'deleteArticle', type: :graphql do
     let(:result) do
       {
         data: {
-          deleteArticle: nil
+          updateQuestion: nil
         },
         errors: [
           {
@@ -70,7 +78,7 @@ RSpec.describe 'deleteArticle', type: :graphql do
               { column: 7, line: 2 }
             ],
             message: 'You are not authorized to perform this action',
-            path: ['deleteArticle']
+            path: ['updateQuestion']
           }
         ]
       }
@@ -84,11 +92,10 @@ RSpec.describe 'deleteArticle', type: :graphql do
     let(:result) do
       {
         data: {
-          deleteArticle: {
-            article: {
-              body: article.body,
-              description: article.description,
-              title: article.title
+          updateQuestion: {
+            question: {
+              body: question.body,
+              tags: tags.map { |tag| { id: tag.id.to_s, name: tag.name } },
             }
           }
         }

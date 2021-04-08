@@ -9,16 +9,16 @@ module Mutations
       end
     end
 
-    argument :article_slug, ID, required: true
+    argument :question_id, ID, required: true
     argument :input, CreateCommentInput, required: true
 
     field :comment, Types::CommentType, null: false
 
-    def resolve(article_slug:, input:)
+    def resolve(question_id:, input:)
       authorize! Comment, to: :create?
-      article = Article.find_by(slug: article_slug)
+      question = Question.find(question_id)
       comment = Comment.create!(
-        article: article,
+        question: question,
         author: context[:current_user],
         body: input[:body]
       )

@@ -27,12 +27,12 @@ RSpec.describe 'popularTags', type: :graphql do
     it { is_expected.to eql result }
   end
 
-  context 'current_user is not defined and article has tag' do
-    let!(:article) { create(:article, tags: [tags.first], author: build(:author)) }
+  context 'current_user is not defined and question has tag' do
+    let!(:question) { create(:question, tags: [tags.first], author: build(:author)) }
     let(:result) do
       {
         data: {
-          popularTags: article.tags.map { |tag| { id: tag.id.to_s, name: tag.name } }
+          popularTags: question.tags.map { |tag| { id: tag.id.to_s, name: tag.name } }
         }
       }
     end

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Tag, type: :model do
   describe 'associations' do
-    it { is_expected.to have_many(:articles).through(:taggings) }
+    it { is_expected.to have_many(:questions).through(:taggings).source(:taggable) }
     it { is_expected.to have_many(:taggings).dependent(:destroy) }
   end
 

@@ -2,18 +2,15 @@
 
 module Types
   class MutationType < Types::BaseObject
-    field :create_article, mutation: Mutations::CreateArticle
     field :create_comment, mutation: Mutations::CreateComment
     field :create_question, mutation: Mutations::CreateQuestion
-    field :delete_article, mutation: Mutations::DeleteArticle
     field :delete_comment, mutation: Mutations::DeleteComment
-    field :favorite_article, mutation: Mutations::FavoriteArticle
+    field :delete_question, mutation: Mutations::DeleteQuestion
     field :follow_user, mutation: Mutations::FollowUser
     field :sign_in, mutation: Mutations::SignIn
     field :sign_up, mutation: Mutations::SignUp
-    field :unfavorite_article, mutation: Mutations::UnfavoriteArticle
     field :unfollow_user, mutation: Mutations::UnfollowUser
-    field :update_article, mutation: Mutations::UpdateArticle
+    field :update_question, mutation: Mutations::UpdateQuestion
     field :update_user, mutation: Mutations::UpdateUser
   end
 end

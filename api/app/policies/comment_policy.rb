@@ -6,16 +6,12 @@ class CommentPolicy < ApplicationPolicy
   end
 
   def delete?
-    owner? || article_author?
+    owner?
   end
 
   private
 
   def owner?
     user? && record.author_id == user.id
-  end
-
-  def article_author?
-    user? && record.article.author_id == user.id
   end
 end
