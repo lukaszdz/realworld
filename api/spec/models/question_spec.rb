@@ -20,4 +20,16 @@ RSpec.describe Question, type: :model do
     it { is_expected.to have_many(:taggings).validate.dependent(:destroy) }
     it { is_expected.to have_many(:comments).validate.dependent(:destroy) }
   end
+
+  describe '.tagged_with' do
+    before(:each) do
+      create_list(:tag, 3)
+      create_list(:question, 3, author: build(:author), tags: [])
+      create_list(:question, 3, author: build(:author), tags: Tag.all)
+    end
+
+    subject { described_class.tagged_with(Tag.all) }
+
+    it { expect(subject.length).to be 3 }
+  end
 end

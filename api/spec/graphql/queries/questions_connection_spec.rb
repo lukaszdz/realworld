@@ -2,14 +2,14 @@
 
 require 'rails_helper'
 
-RSpec.describe 'articlesConnection', type: :graphql do
+RSpec.describe 'questionsConnection', type: :graphql do
   let(:query) do
     <<-GRAPHQL
-    query ArticleConnectionQuery($before: String, $after: String, $first: Int, $last: Int, $tagName: String) {
-      articlesConnection(before: $before, after:$after, first: $first, last: $last, tagName: $tagName) {
+    query QuestionsConnectionQuery($before: String, $after: String, $first: Int, $last: Int, $tagNames: [String!]) {
+      questionsConnection(before: $before, after:$after, first: $first, last: $last, tagNames: $tagNames) {
         edges {
           node {
-            slug
+            id
           }
         }
         pageInfo {
@@ -30,15 +30,15 @@ RSpec.describe 'articlesConnection', type: :graphql do
     { first: 2 }
   end
 
-  let!(:tagged_articles) { create_list(:article, 2, author: author, tags: tags) }
-  let!(:articles) { create_list(:article, 2, author: author) }
+  let!(:tagged_questions) { create_list(:question, 2, author: author, tags: tags) }
+  let!(:questions) { create_list(:question, 2, author: author) }
 
   context 'current_user is not defined' do
     let(:result) do
       {
         data: {
-          articlesConnection: {
-            edges: articles.reverse.map { |article| { node: { slug: article.slug } } },
+          questionsConnection: {
+            edges: questions.reverse.map { |question| { node: { id: question.id.to_s } } },
             pageInfo: {
               endCursor: 'Mg',
               hasNextPage: true,
@@ -54,13 +54,13 @@ RSpec.describe 'articlesConnection', type: :graphql do
 
   context 'current_user is nil with tag' do
     let(:variables) do
-      { first: 4, tagName: tags.first.name }
+      { first: 4, tagNames: tags.map(&:name) }
     end
     let(:result) do
       {
         data: {
-          articlesConnection: {
-            edges: tagged_articles.reverse.map { |article| { node: { slug: article.slug } } },
+          questionsConnection: {
+            edges: tagged_questions.reverse.map { |question| { node: { id: question.id.to_s } } },
             pageInfo: {
               endCursor: 'Mg',
               hasNextPage: false,

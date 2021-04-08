@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe CommentPolicy, type: :policy do
-  let(:article_author) { build_stubbed(:author) }
-  let(:article) { build_stubbed :article, author: article_author }
+  let(:question_author) { build_stubbed(:author) }
+  let(:question) { build_stubbed :question, author: question_author }
   let(:author) { build_stubbed(:author) }
   let(:context) { { user: current_user } }
   let(:current_user) { nil }
-  let(:record) { build_stubbed :comment, author: author, article: article }
+  let(:record) { build_stubbed :comment, author: author, question: question }
   let(:user) { build_stubbed(:user) }
 
   describe_rule :create? do
@@ -26,8 +26,8 @@ RSpec.describe CommentPolicy, type: :policy do
     succeed 'when user is author' do
       let(:current_user) { author }
     end
-    succeed 'when user is article author' do
-      let(:current_user) { article_author }
+    failed 'when user is question author' do
+      let(:current_user) { question_author }
     end
   end
 end

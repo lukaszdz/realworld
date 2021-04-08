@@ -15,9 +15,9 @@ RSpec.describe 'deleteComment', type: :graphql do
     GRAPHQL
   end
   let(:comment_author) { create(:author) }
-  let(:article_author) { create(:author) }
-  let(:article) { create(:article, author: article_author) }
-  let(:comment) { create(:comment, author: comment_author, article: article) }
+  let(:question_author) { create(:author) }
+  let(:question) { create(:question, author: question_author) }
+  let(:comment) { create(:comment, author: comment_author, question: question) }
   let(:variables) do
     {
       id: comment.id
@@ -95,17 +95,27 @@ RSpec.describe 'deleteComment', type: :graphql do
     it { is_expected.to eql result }
   end
 
-  context 'current_user is article author' do
-    let(:current_user) { article_author }
+  context 'current_user is question author' do
+    let(:current_user) { question_author }
     let(:result) do
       {
         data: {
-          deleteComment: {
-            comment: {
-              body: comment.body
-            }
+          deleteComment: nil
+        },
+        errors: [
+          {
+            extensions: {
+              code: 'UNAUTHORIZED',
+              details: {},
+              fullMessages: []
+            },
+            locations: [
+              { column: 7, line: 2 }
+            ],
+            message: 'You are not authorized to perform this action',
+            path: ['deleteComment']
           }
-        }
+        ]
       }
     end
 

@@ -2,36 +2,23 @@
 
 module Types
   class QueryType < Types::BaseObject
-    field :feed_connection, ArticleType.connection_type, null: false, authorized_scope: { with: ArticleFeedPolicy } do
-      argument :tag_name, String, required: false
+    field :questions_connection, QuestionType.connection_type, null: false do
+      argument :tag_names, [String], required: false
     end
 
-    def feed_connection(tag_name: nil)
-      scope = Article.all
-      scope = scope.tagged_with(Tag.where(name: tag_name)) if tag_name.present?
-      scope = scope.order(created_at: :desc)
+    def questions_connection(tag_names: [])
+      scope = Question.all.order(created_at: :desc)
+      scope = scope.tagged_with(Tag.where(name: tag_names)) if tag_names.present?
 
       scope
     end
 
-    field :articles_connection, ArticleType.connection_type, null: false do
-      argument :tag_name, String, required: false
+    field :question, QuestionType, null: true do
+      argument :id, ID, required: true
     end
 
-    def articles_connection(tag_name: nil)
-      scope = Article.all
-      scope = scope.tagged_with(Tag.where(name: tag_name)) if tag_name.present?
-      scope = scope.order(created_at: :desc)
-
-      scope
-    end
-
-    field :article_by_slug, ArticleType, null: false do
-      argument :slug, ID, required: true
-    end
-
-    def article_by_slug(slug:)
-      Article.find_by(slug: slug)
+    def question(id:)
+      question = Question.find(id)
     end
 
     field :popular_tags, [TagType], null: false
@@ -76,6 +63,6 @@ module Types
       context[:current_user]
     end
 
-    expose_authorization_rules :create?, with: ArticlePolicy, field_name: 'can_create_article'
+    expose_authorization_rules :create?, with: QuestionPolicy, field_name: 'can_create_question'
   end
 end

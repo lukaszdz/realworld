@@ -8,4 +8,10 @@ class Question < ApplicationRecord
 
   validates :body, presence: true
   validates :author, presence: true
+
+  def self.tagged_with(tags)
+    return none unless tags.present?
+
+    joins(:taggings).merge(Tagging.joins(:tag).merge(tags)).distinct
+  end
 end

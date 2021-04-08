@@ -6,20 +6,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   has_one :profile, autosave: true, dependent: :destroy, validate: true
-  has_many :favorites, dependent: :destroy
-  has_many :favorite_articles, through: :favorites, source: :article
-  has_many :active_relationships, class_name: 'Relationship',
-                                  foreign_key: 'follower_id',
-                                  dependent: :destroy
-  has_many :passive_relationships, class_name: 'Relationship',
-                                   foreign_key: 'followed_id',
-                                   dependent: :destroy
-  has_many :following, through: :active_relationships, source: :followed
-  has_many :followers, through: :passive_relationships, source: :follower
-  has_many :articles, foreign_key: 'author_id', dependent: :destroy
+
+  has_many :questions, foreign_key: 'author_id', dependent: :destroy
   has_many :comments, foreign_key: 'author_id', dependent: :destroy
-  has_many :favorites, dependent: :destroy
-  has_many :favorite_articles, through: :favorites, source: :article
   accepts_nested_attributes_for :profile
   validates_presence_of :username, :encrypted_password, :followers_count, :following_count
   validates_uniqueness_of :username

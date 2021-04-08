@@ -15,17 +15,17 @@ RSpec.describe 'comment', type: :graphql do
         author {
           username
         }
-        article {
-          slug
+        question {
+          id
         }
       }
     }
     GRAPHQL
   end
-  let(:article_author) { create(:author) }
+  let(:question_author) { create(:author) }
   let(:comment_author) { create(:author) }
-  let(:article) { create(:article, author: article_author) }
-  let(:comment) { create(:comment, article: article, author: comment_author) }
+  let(:question) { create(:question, author: question_author) }
+  let(:comment) { create(:comment, question: question, author: comment_author) }
   let(:variables) do
     {
       id: comment.id
@@ -37,8 +37,8 @@ RSpec.describe 'comment', type: :graphql do
       {
         data: {
           comment: {
-            article: {
-              slug: article.slug
+            question: {
+              id: question.id.to_s
             },
             author: {
               username: comment_author.username
@@ -59,8 +59,8 @@ RSpec.describe 'comment', type: :graphql do
       {
         data: {
           comment: {
-            article: {
-              slug: article.slug
+            question: {
+              id: question.id.to_s
             },
             author: {
               username: comment_author.username
@@ -81,8 +81,8 @@ RSpec.describe 'comment', type: :graphql do
       {
         data: {
           comment: {
-            article: {
-              slug: article.slug
+            question: {
+              id: question.id.to_s
             },
             author: {
               username: comment_author.username
@@ -97,20 +97,20 @@ RSpec.describe 'comment', type: :graphql do
     it { is_expected.to eql result }
   end
 
-  context 'current_user is article author' do
-    let(:current_user) { article_author }
+  context 'current_user is question author' do
+    let(:current_user) { question_author }
     let(:result) do
       {
         data: {
           comment: {
-            article: {
-              slug: article.slug
+            question: {
+              id: question.id.to_s
             },
             author: {
               username: comment_author.username
             },
             body: comment.body,
-            canDelete: { value: true },
+            canDelete: { value: false },
             id: comment.id.to_s
           }
         }

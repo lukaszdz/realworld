@@ -5,11 +5,11 @@ require 'rails_helper'
 RSpec.describe 'createComment', type: :graphql do
   let(:mutation) do
     <<-GRAPHQL
-    mutation CreateCommentMutation($articleSlug: ID!, $input: CreateCommentInput!) {
-      createComment(articleSlug: $articleSlug, input: $input) {
+    mutation CreateCommentMutation($questionId: ID!, $input: CreateCommentInput!) {
+      createComment(questionId: $questionId, input: $input) {
         comment {
-          article {
-            slug
+          question {
+            id
           }
           author {
             username
@@ -21,11 +21,11 @@ RSpec.describe 'createComment', type: :graphql do
     GRAPHQL
   end
   let(:tags) { create_list(:tag, 3) }
-  let(:article) { create(:article, author: build(:author)) }
+  let(:question) { create(:question, author: build(:author)) }
   let(:comment_attributes) { attributes_for(:comment) }
   let(:variables) do
     {
-      articleSlug: article.slug,
+      questionId: question.id,
       input: {
         body: comment_attributes[:body]
       }
@@ -61,8 +61,8 @@ RSpec.describe 'createComment', type: :graphql do
         data: {
           createComment: {
             comment: {
-              article: {
-                slug: article.slug
+              question: {
+                id: question.id.to_s
               },
               author: {
                 username: current_user.username

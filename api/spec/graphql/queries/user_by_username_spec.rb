@@ -14,28 +14,13 @@ RSpec.describe 'userByUsername', type: :graphql do
           bio
           imageUrl
         }
-        followersCount
-        viewerIsFollowing
         isViewer
-        articlesConnection {
+        questionsConnection {
           edges {
             node {
-              slug
+              id
             }
           }
-        }
-        favoriteArticlesConnection {
-          edges {
-            node {
-              slug
-            }
-          }
-        }
-        canUnfollow {
-          value
-        }
-        canFollow {
-          value
         }
         canUpdate {
           value
@@ -57,15 +42,11 @@ RSpec.describe 'userByUsername', type: :graphql do
       {
         data: {
           userByUsername: {
-            articlesConnection: {
+            questionsConnection: {
               edges: []
             },
-            canFollow: { value: false },
-            canUnfollow: { value: false },
             canUpdate: { value: false },
             email: owner.email,
-            favoriteArticlesConnection: { edges: [] },
-            followersCount: owner.followers_count,
             isViewer: false,
             profile: {
               id: owner.profile.id.to_s,
@@ -73,7 +54,6 @@ RSpec.describe 'userByUsername', type: :graphql do
               imageUrl: owner.profile.image_url
             },
             username: owner.username,
-            viewerIsFollowing: false
           }
         }
       }
@@ -87,15 +67,11 @@ RSpec.describe 'userByUsername', type: :graphql do
       {
         data: {
           userByUsername: {
-            articlesConnection: {
+            questionsConnection: {
               edges: []
             },
-            canFollow: { value: true },
-            canUnfollow: { value: false },
             canUpdate: { value: false },
             email: owner.email,
-            favoriteArticlesConnection: { edges: [] },
-            followersCount: owner.followers_count,
             isViewer: false,
             profile: {
               id: owner.profile.id.to_s,
@@ -103,37 +79,6 @@ RSpec.describe 'userByUsername', type: :graphql do
               imageUrl: owner.profile.image_url
             },
             username: owner.username,
-            viewerIsFollowing: false
-          }
-        }
-      }
-    end
-    it { is_expected.to eql result }
-  end
-
-  context 'current_user is a follower' do
-    let(:current_user) { create(:relationship, follower: user, followed: owner).follower }
-    let(:result) do
-      {
-        data: {
-          userByUsername: {
-            articlesConnection: {
-              edges: []
-            },
-            canFollow: { value: false },
-            canUnfollow: { value: true },
-            canUpdate: { value: false },
-            email: owner.email,
-            favoriteArticlesConnection: { edges: [] },
-            followersCount: owner.followers_count,
-            isViewer: false,
-            profile: {
-              id: owner.profile.id.to_s,
-              bio: owner.profile.bio,
-              imageUrl: owner.profile.image_url
-            },
-            username: owner.username,
-            viewerIsFollowing: true
           }
         }
       }
@@ -147,23 +92,18 @@ RSpec.describe 'userByUsername', type: :graphql do
       {
         data: {
           userByUsername: {
-            articlesConnection: {
+            questionsConnection: {
               edges: []
             },
-            canFollow: { value: false },
-            canUnfollow: { value: false },
             canUpdate: { value: true },
             email: owner.email,
-            favoriteArticlesConnection: { edges: [] },
-            followersCount: owner.followers_count,
             isViewer: true,
             profile: {
               id: owner.profile.id.to_s,
               bio: owner.profile.bio,
               imageUrl: owner.profile.image_url
             },
-            username: owner.username,
-            viewerIsFollowing: false
+            username: owner.username
           }
         }
       }
