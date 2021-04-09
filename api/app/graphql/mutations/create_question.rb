@@ -4,7 +4,7 @@ module Mutations
   class CreateQuestion < Mutations::BaseMutation
     class CreateQuestionInput < Types::BaseInputObject
       argument :body, String, required: true
-      argument :tag_ids, [ID], required: true
+      argument :tag_ids, [ID], required: false
 
       def prepare
         to_h
