@@ -32,16 +32,14 @@ end
     user.build_profile
     user.save!
     20.times do
-      user.articles.build(
+      user.questions.build(
         body: Faker::Lorem.paragraph(sentence_count: 10),
-        description: Faker::Lorem.sentence,
-        title: Faker::Lorem.sentence
-      ) do |article|
-        article.save!
-        article.tags << Tag.offset(rand(Tag.count)).first
+      ) do |question|
+        question.save!
+        question.tags << Tag.offset(rand(Tag.count)).first
         5.times do
           User.offset(rand(User.count)).first.comments.create(
-            article: article,
+            question: question,
             body: Faker::Lorem.sentence
           )
         end
