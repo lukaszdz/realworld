@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.3.14",
+    "@storybook/addon-essentials": "^6.2.7",
     "clsx": "1.1.1",
     "cookie": "0.4.1",
     "formik": "2.2.6",
